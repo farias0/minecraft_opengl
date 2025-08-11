@@ -1,0 +1,11 @@
+- place block
+    - block data structure
+    - raycasting or something
+- delete block
+    - feedback animation (shader, transparency, something simple)
+- terrain generation
+- walking
+    - player
+    - collision
+    - gravity
+    - jumping and/or autojumping (for ledges 1 block high)

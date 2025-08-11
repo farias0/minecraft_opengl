@@ -4,7 +4,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-const float SPEED = 2.5f;
+#include "Game.hpp"
+
+const float SPEED = 4.5f;
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 const float MOUSE_SENSITIVITY = 0.2f;
 const float ZOOM_SENSITIVITY = 5.0f;
@@ -35,12 +37,12 @@ public:
         return glm::lookAt(Pos, Pos + front, WORLD_UP);
     }
 
-    glm::mat4 GetProjectionMatrix(float screenWidth, float screenHeight)
+    glm::mat4 GetProjectionMatrix()
     {
-        return glm::perspective(glm::radians(fov), screenWidth / screenHeight, 0.1f, 100.0f);
+        return glm::perspective(glm::radians(fov), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
     }
 
-    void ProcessKeyboard(Movement direction, float deltaTime)
+    void ProcessKeyboard(Movement direction)
     {
         switch (direction)
         {
