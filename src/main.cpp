@@ -115,14 +115,17 @@ void ProcessInput(GLFWwindow *window) {
         isHoldingWireframe = false;
     }
 
+
+    uint8_t keyboardMove = 0;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera->ProcessKeyboard(Camera::Movement::FORWARDS);
+        keyboardMove |= Camera::Movement::FORWARDS;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera->ProcessKeyboard(Camera::Movement::BACKWARDS);
+        keyboardMove |= Camera::Movement::BACKWARDS;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera->ProcessKeyboard(Camera::Movement::LEFT);
+        keyboardMove |= Camera::Movement::LEFT;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-       camera->ProcessKeyboard(Camera::Movement::RIGHT);
+        keyboardMove |= Camera::Movement::RIGHT;
+    if (keyboardMove) camera->ProcessKeyboardMovement(keyboardMove);
 }
 
 void MouseCallback(GLFWwindow* window, double xPos, double yPos)
@@ -130,8 +133,8 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
     window;
 
     static double lastX = xPos, lastY = yPos;
-    float xOffset = (float)(xPos - lastX) * MOUSE_SENSITIVITY;
-    float yOffset = (float)(yPos - lastY) * MOUSE_SENSITIVITY;
+    float xOffset = (float)(xPos - lastX);
+    float yOffset = (float)(yPos - lastY);
     lastX = xPos;
     lastY = yPos;
 

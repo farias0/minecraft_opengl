@@ -6,9 +6,9 @@
 
 #include "Game.hpp"
 
-const float SPEED = 4.5f;
+const float MOVE_SPEED = 7.0f;
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
-const float MOUSE_SENSITIVITY = 0.2f;
+const float MOUSE_SENSITIVITY = 0.1f;
 const float ZOOM_SENSITIVITY = 5.0f;
 
 class Camera
@@ -17,10 +17,10 @@ public:
 
     enum Movement
     {
-        FORWARDS,
-        BACKWARDS,
-        LEFT,
-        RIGHT
+        FORWARDS = 1,
+        BACKWARDS = 2,
+        LEFT = 4,
+        RIGHT = 8,
     };
 
     glm::vec3 Pos = glm::vec3(0.0, 0.0, 0.0);
@@ -42,25 +42,16 @@ public:
         return glm::perspective(glm::radians(fov), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
     }
 
-    void ProcessKeyboard(Movement direction)
+    void ProcessKeyboardMovement(uint8_t direction)
     {
-        switch (direction)
-        {
-        case FORWARDS:
-            Pos += SPEED * deltaTime * front;
-            break;
-        case BACKWARDS:
-            Pos -= SPEED * deltaTime * front;
-            break;
-        case LEFT:
-            Pos -= SPEED * deltaTime * right;
-            break;
-        case RIGHT:
-            Pos += SPEED * deltaTime * right;
-            break;
-        default:
-            break;
-        }
+        glm::vec3 deltaMove = glm::vec3(0, 0, 0);
+        glm::vec3 noMove = deltaMove;
+        if (direction & FORWARDS) deltaMove += front;
+        if (direction & BACKWARDS) deltaMove -= front;
+        if (direction & RIGHT) deltaMove += right;
+        if (direction & LEFT) deltaMove -= right;
+        if (deltaMove != noMove)
+            Pos += MOVE_SPEED * deltaTime * glm::normalize(deltaMove);
     }
 
     void ProcessMouseMovement(float xOffset, float yOffset)

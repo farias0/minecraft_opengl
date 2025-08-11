@@ -1,4 +1,5 @@
 - place block
+    - crosshair
     - block data structure
     - raycasting or something
 - delete block
