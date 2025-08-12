@@ -9,6 +9,7 @@
 #include "Cube.hpp"
 #include "Debug.hpp"
 #include "GameState.hpp"
+#include "Player.hpp"
 
 std::map<std::tuple<int, int, int>, std::unique_ptr<Cube>> cubes;
 
@@ -18,6 +19,8 @@ void GenerateTerrain();
 
 void StartGame()
 {
+    player = std::unique_ptr<Player>(new Player(glm::vec3(0, 0, 0)));
+
     camera = std::unique_ptr<Camera>(new Camera());
     
     GenerateTerrain();
@@ -40,14 +43,20 @@ void ProcessInput(GLFWwindow *window) {
 
     uint8_t keyboardMove = 0;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::FORWARDS;
+        keyboardMove |= Player::Movement::FORWARDS;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::BACKWARDS;
+        keyboardMove |= Player::Movement::BACKWARDS;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::LEFT;
+        keyboardMove |= Player::Movement::LEFT;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::RIGHT;
-    if (keyboardMove) camera->ProcessKeyboardMovement(keyboardMove);
+        keyboardMove |= Player::Movement::RIGHT;
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        keyboardMove |= Player::Movement::UP;
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        keyboardMove |= Player::Movement::DOWN;
+    if (keyboardMove) player->ProcessKeyboardMovement(keyboardMove);
+
+
 }
 
 void MouseMoveCallback(GLFWwindow* window, double xPos, double yPos)

@@ -1,7 +1,6 @@
 - toggle between flying and walking modes
 - player/block collision
 
-- space/ctrl flight controls
 - crosshair
 - raycasting
 - player gravity
@@ -19,3 +18,6 @@
     - greedy meshing?
     - texture atlas?
     
+
+- better terrain generation?
+    https://www.youtube.com/watch?v=CSa5O6knuwI

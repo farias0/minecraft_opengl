@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "GameState.hpp"
+#include "Player.hpp"
 
 const float MOVE_SPEED = 7.0f;
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -14,49 +15,29 @@ const float ZOOM_SENSITIVITY = 5.0f;
 class Camera
 {
 public:
-
-    enum Movement
-    {
-        FORWARDS = 1,
-        BACKWARDS = 2,
-        LEFT = 4,
-        RIGHT = 8,
-    };
-
-    glm::vec3 Pos = glm::vec3(0.0, 0.0, 0.0);
+    glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 Right;
 
     Camera()
     {
-        updateCameraVectors();
+        UpdateCameraVectors();
     }
 
     glm::vec3 LookingAt()
     {
-        return Pos + front;
+        return GetPos() + Front;
     }
 
     glm::mat4 GetViewMatrix()
     {
         // ATTENTION: The lookAt function with a fixed cameraUp will break if the 
         // camera's pitch is close to vertical, or if the camera rolls.
-        return glm::lookAt(Pos, LookingAt(), WORLD_UP);
+        return glm::lookAt(GetPos(), LookingAt(), WORLD_UP);
     }
 
     glm::mat4 GetProjectionMatrix()
     {
         return glm::perspective(glm::radians(fov), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
-    }
-
-    void ProcessKeyboardMovement(uint8_t direction)
-    {
-        glm::vec3 deltaMove = glm::vec3(0, 0, 0);
-        glm::vec3 noMove = deltaMove;
-        if (direction & FORWARDS) deltaMove += front;
-        if (direction & BACKWARDS) deltaMove -= front;
-        if (direction & RIGHT) deltaMove += right;
-        if (direction & LEFT) deltaMove -= right;
-        if (deltaMove != noMove)
-            Pos += MOVE_SPEED * deltaTime * glm::normalize(deltaMove);
     }
 
     void ProcessMouseMovement(float xOffset, float yOffset)
@@ -70,7 +51,7 @@ public:
         if (pitch > 89.0f) pitch = 89.0f;
         if (pitch < -89.0f) pitch = -89.9f;
 
-        updateCameraVectors();
+        UpdateCameraVectors();
     }
 
     void ProcessMouseScroll(float yOffset)
@@ -83,20 +64,22 @@ public:
     }
 
 private:
-
-    glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 right;
     float fov = 45.0f;
     float yaw = -90.0f;
     float pitch = 0.0f;
 
-    void updateCameraVectors()
+    glm::vec3 GetPos()
     {
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front = glm::normalize(front);
+        return player->Pos;
+    }
 
-        right = glm::normalize(glm::cross(front, WORLD_UP));
+    void UpdateCameraVectors()
+    {
+        Front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        Front.y = sin(glm::radians(pitch));
+        Front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        Front = glm::normalize(Front);
+
+        Right = glm::normalize(glm::cross(Front, WORLD_UP));
     }
 };

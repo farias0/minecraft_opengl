@@ -10,3 +10,6 @@ extern float deltaTime;
 
 class Camera;
 extern std::unique_ptr<Camera> camera;
+
+class Player;
+extern std::unique_ptr<Player> player;
