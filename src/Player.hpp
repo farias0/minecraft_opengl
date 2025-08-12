@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "Collision.hpp"
+
 class Player
 {
 public:
@@ -12,6 +14,8 @@ public:
     Player(glm::vec3 pos);
     void ProcessKeyboardMovement(GLFWwindow *window);
     void Update();
+
+    AABB GetCollisionBox();
 
 private:
     bool isFlying = true;

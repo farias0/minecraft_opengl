@@ -11,7 +11,6 @@
 #include "GameState.hpp"
 #include "Player.hpp"
 
-std::map<std::tuple<int, int, int>, std::unique_ptr<Cube>> cubes;
 
 bool AddCube(int x, int y, int z);
 bool RemoveCube(int x, int y, int z);

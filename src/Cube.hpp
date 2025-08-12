@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+#include "Collision.hpp"
 #include "Shader.hpp"
 
 class Cube
@@ -12,6 +13,8 @@ public:
 
     Cube(glm::vec3 pos);
     void Render();
+
+    AABB GetCollisionBox();
 
 private:
     static const char *TEXTURE_PATH;

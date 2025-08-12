@@ -24,7 +24,8 @@ add_executable(${PROJECT_NAME}
                 src/GameState.cpp
                 src/Game.cpp
                 src/Cube.cpp
-                src/Player.cpp)
+                src/Player.cpp
+                src/Collision.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw OpenGL::GL glad glm::glm-header-only)
 

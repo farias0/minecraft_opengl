@@ -95,6 +95,14 @@ void Cube::Render()
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
+AABB Cube::GetCollisionBox()
+{
+    AABB box;
+    box.min = pos + glm::vec3(-0.5f, -0.5f, -0.5f);
+    box.max = pos + glm::vec3( 0.5f,  0.5f,  0.5f);
+    return box;
+}
+
 void Cube::LoadData()
 {
     shader = std::unique_ptr<Shader>(new Shader("src/shaders/triangle.vs", "src/shaders/triangle.fs"));

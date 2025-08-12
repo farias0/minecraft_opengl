@@ -1,4 +1,6 @@
-- player/block collision
+- fix player collision physics
+- player non-flying movement
+- player-block collision: check only nearby cubes
 
 - crosshair
 - raycasting
