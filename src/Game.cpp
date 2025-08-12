@@ -6,23 +6,20 @@
 
 #include "Camera.hpp"
 #include "Cube.hpp"
+#include "Debug.hpp"
 #include "GameState.hpp"
 
 std::map<std::tuple<int, int, int>, std::unique_ptr<Cube>> cubes;
 
 bool AddCube(int x, int y, int z);
-
 bool RemoveCube(int x, int y, int z);
+void GenerateTerrain();
 
 void StartGame()
 {
     camera = std::unique_ptr<Camera>(new Camera());
-
-    AddCube(-2, -1, -5);
-    AddCube(-1, -2, -5);
-    AddCube(0, -2, -5);
-    AddCube(1, -2, -5);
-    AddCube(2, -1, -5);
+    
+    GenerateTerrain();
 }
 
 void UpdateGame()
@@ -89,11 +86,6 @@ void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
     camera->ProcessMouseScroll((float)yOffset);
 }
 
-void DebugLog(std::string message)
-{
-    std::cout << "[DEBUG] " << message << std::endl;
-}
-
 bool AddCube(int x, int y, int z)
 {
     std::tuple tuple = std::make_tuple(x, y, z);
@@ -124,4 +116,31 @@ bool RemoveCube(int x, int y, int z)
     {
         return false;
     }
+}
+
+void GenerateTerrain()
+{
+    const int y = -2;
+    int count = 0;
+    std::stringstream logMsg;
+
+    logMsg << "TERRAIN GEN started";
+    DebugLog(logMsg.str());
+
+    for (int x = -50; x <= 50; x++)
+    {
+        for (int z = -50; z <= 50; z++)
+        {
+            AddCube(x, y, z);
+            count++;
+
+            // logMsg.str("");
+            // logMsg << "TERRAIN GEN added block #" << count << " x=" << x << " y=" << y << " z=" << z;
+            // DebugLog(logMsg.str());
+        }
+    }
+
+    logMsg.str("");
+    logMsg << "TERRAIN GEN generated " << count << " blocks.";
+    DebugLog(logMsg.str());
 }
