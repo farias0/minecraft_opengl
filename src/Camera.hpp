@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Game.hpp"
+#include "GameState.hpp"
 
 const float MOVE_SPEED = 7.0f;
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);

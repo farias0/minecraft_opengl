@@ -3,8 +3,9 @@
 #include <glm/glm.hpp>
 #include <stb_image.h>
 
-#include "Shader.hpp"
 #include "Camera.hpp"
+#include "GameState.hpp"
+#include "Shader.hpp"
 
 class Cube
 {

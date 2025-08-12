@@ -17,7 +17,11 @@ add_library(glad external/glad/src/glad.c)
 target_include_directories(glad PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include)
 
 
-add_executable(${PROJECT_NAME} src/main.cpp external/stb/stb_image.cpp)
+add_executable(${PROJECT_NAME} 
+                src/main.cpp 
+                external/stb/stb_image.cpp 
+                src/GameState.cpp
+                src/Game.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw OpenGL::GL glad glm::glm-header-only)
 

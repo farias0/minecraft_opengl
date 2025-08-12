@@ -1,10 +1,13 @@
 #pragma once
 
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
+#include <string>
 
-double lastFrame = 0.0;
-float deltaTime = 0.0;
+void StartGame();
+void UpdateGame();
+void RenderGame();
 
-class Camera;
-std::unique_ptr<Camera> camera;
+void ProcessInput(GLFWwindow *window);
+void MouseMoveCallback(GLFWwindow* window, double xPos, double yPos);
+void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset);
+
+void DebugLog(std::string message);

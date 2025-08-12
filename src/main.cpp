@@ -1,20 +1,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-#include <stb_image.h>
 
-#include "Camera.hpp"
-#include "Cube.hpp"
 #include "Game.hpp"
-#include "Shader.hpp"
+#include "GameState.hpp"
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
-void ProcessInput(GLFWwindow *window);
-void MouseCallback(GLFWwindow* window, double xPos, double yPos);
-void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+void ToggleWireframeMode();
 
 int main() {
 
@@ -42,8 +34,8 @@ int main() {
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, MouseCallback);
-    glfwSetScrollCallback(window, ScrollCallback);
+    glfwSetCursorPosCallback(window, MouseMoveCallback);
+    glfwSetScrollCallback(window, ScrollWheelCallback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD" << std::endl;
@@ -54,9 +46,7 @@ int main() {
 
     //
 
-    camera = std::unique_ptr<Camera>(new Camera());
-
-    Cube cube = Cube(glm::vec3(0, -2, -5));
+    StartGame();
 
     //
     
@@ -66,14 +56,31 @@ int main() {
         deltaTime = (float)(currentTime - lastFrame);
         lastFrame = currentTime;
 
+        //
+
+        static bool isHoldingWireframe = false;
+
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+        
+        if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS && !isHoldingWireframe) {
+            isHoldingWireframe = true;
+            ToggleWireframeMode();
+        }
+        else if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_RELEASE) {
+            isHoldingWireframe = false;
+        }
+
         ProcessInput(window);
         
+        UpdateGame();
+
         //
 
         glClearColor(0.3f, 0.62f, 0.89f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        cube.Render();
+        RenderGame();
 
         glfwSwapBuffers(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -98,51 +105,4 @@ void ToggleWireframeMode() {
     static bool wireframeMode = false;
     wireframeMode = !wireframeMode;
     glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
-}
-
-void ProcessInput(GLFWwindow *window) {
-    
-    static bool isHoldingWireframe = false;
-
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-    
-    if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS && !isHoldingWireframe) {
-        isHoldingWireframe = true;
-        ToggleWireframeMode();
-    }
-    else if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_RELEASE) {
-        isHoldingWireframe = false;
-    }
-
-
-    uint8_t keyboardMove = 0;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::FORWARDS;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::BACKWARDS;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::LEFT;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        keyboardMove |= Camera::Movement::RIGHT;
-    if (keyboardMove) camera->ProcessKeyboardMovement(keyboardMove);
-}
-
-void MouseCallback(GLFWwindow* window, double xPos, double yPos)
-{
-    window;
-
-    static double lastX = xPos, lastY = yPos;
-    float xOffset = (float)(xPos - lastX);
-    float yOffset = (float)(yPos - lastY);
-    lastX = xPos;
-    lastY = yPos;
-
-    camera->ProcessMouseMovement(xOffset, yOffset);
-}
-
-void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
-{
-    window; xOffset;
-    camera->ProcessMouseScroll((float)yOffset);
 }
