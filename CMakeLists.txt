@@ -20,6 +20,7 @@ target_include_directories(glad PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/glad
 add_executable(${PROJECT_NAME} 
                 src/main.cpp 
                 external/stb/stb_image.cpp 
+                external/stb/stb_perlin.cpp
                 src/GameState.cpp
                 src/Game.cpp
                 src/Cube.cpp)

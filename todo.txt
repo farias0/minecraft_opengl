@@ -1,6 +1,7 @@
-- natural terrain gen
+- toggle between flying and walking modes
 - player/block collision
 
+- space/ctrl flight controls
 - crosshair
 - raycasting
 - player gravity
@@ -10,9 +11,11 @@
 
 
 - performance:
+    - single block render function
     - frustum culling
     - divide the world in chunks and only render the ones near
     - load all cubes from a chunk into a single vertex buffer
     - only load vertex faces that are exposed to the air to the buffer
     - greedy meshing?
     - texture atlas?
+    

@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <map>
+#include <stb_perlin.h>
 
 #include "Game.hpp"
 
@@ -120,23 +121,29 @@ bool RemoveCube(int x, int y, int z)
 
 void GenerateTerrain()
 {
-    const int y = -2;
+    const int surfaceYMax = -2;
+    const int terrainThickness = 3;
+    const int minX = -15, maxX = 15, minZ = -15, maxZ = 15;
+    const float lacunarity = 1.4f, gain = 0.5f;
+    const int octaves = 2;
     int count = 0;
     std::stringstream logMsg;
 
     logMsg << "TERRAIN GEN started";
     DebugLog(logMsg.str());
 
-    for (int x = -50; x <= 50; x++)
+    for (int x = minX; x <= maxX; x++)
     {
-        for (int z = -50; z <= 50; z++)
+        for (int z = minZ; z <= maxZ; z++)
         {
-            AddCube(x, y, z);
-            count++;
-
-            // logMsg.str("");
-            // logMsg << "TERRAIN GEN added block #" << count << " x=" << x << " y=" << y << " z=" << z;
-            // DebugLog(logMsg.str());
+            float noise = stb_perlin_fbm_noise3((float)x * 0.1f, 0.0f, (float)z * 0.1f, lacunarity, gain, octaves);
+            noise = (noise + 1.0f) * 0.5f;
+            int columnThickness = static_cast<int>(std::round(terrainThickness * noise));
+            for (int y = surfaceYMax - terrainThickness; y < surfaceYMax - terrainThickness + columnThickness; y++)
+            {
+                AddCube(x, y, z);
+                count++;
+            }
         }
     }
 
