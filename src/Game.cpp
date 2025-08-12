@@ -28,7 +28,7 @@ void StartGame()
 
 void UpdateGame()
 {
-    //
+    player->Update();
 }
 
 void RenderGame()
@@ -41,22 +41,7 @@ void RenderGame()
 
 void ProcessInput(GLFWwindow *window) {
 
-    uint8_t keyboardMove = 0;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        keyboardMove |= Player::Movement::FORWARDS;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        keyboardMove |= Player::Movement::BACKWARDS;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        keyboardMove |= Player::Movement::LEFT;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        keyboardMove |= Player::Movement::RIGHT;
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        keyboardMove |= Player::Movement::UP;
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        keyboardMove |= Player::Movement::DOWN;
-    if (keyboardMove) player->ProcessKeyboardMovement(keyboardMove);
-
-
+    player->ProcessKeyboardMovement(window);
 }
 
 void MouseMoveCallback(GLFWwindow* window, double xPos, double yPos)

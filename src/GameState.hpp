@@ -5,6 +5,8 @@
 extern const unsigned int SCR_WIDTH;
 extern const unsigned int SCR_HEIGHT;
 
+extern const float GRAVITY;
+
 extern double lastFrame;
 extern float deltaTime;
 

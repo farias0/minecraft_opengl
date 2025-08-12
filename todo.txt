@@ -1,9 +1,7 @@
-- toggle between flying and walking modes
 - player/block collision
 
 - crosshair
 - raycasting
-- player gravity
 - jumping and/or autojumping (for ledges 1 block high)
 - delete block animation (shader, transparency, something simple)
 - hold to keep adding/deleting block
