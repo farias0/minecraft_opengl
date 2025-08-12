@@ -1,12 +1,9 @@
-- place block
-    - crosshair
-    - block data structure
-    - raycasting or something
-- delete block
-    - feedback animation (shader, transparency, something simple)
+- crosshair
+- raycasting
 - terrain generation
 - walking
-    - player
-    - collision
+    - player/block collision
     - gravity
     - jumping and/or autojumping (for ledges 1 block high)
+- delete block animation (shader, transparency, something simple)
+- hold to add/delete block

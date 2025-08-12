@@ -35,6 +35,7 @@ int main() {
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, MouseMoveCallback);
+    glfwSetMouseButtonCallback(window, MouseClickCallback);
     glfwSetScrollCallback(window, ScrollWheelCallback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {

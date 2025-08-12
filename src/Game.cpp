@@ -8,10 +8,11 @@
 #include "Cube.hpp"
 #include "GameState.hpp"
 
-
 std::map<std::tuple<int, int, int>, std::unique_ptr<Cube>> cubes;
 
 bool AddCube(int x, int y, int z);
+
+bool RemoveCube(int x, int y, int z);
 
 void StartGame()
 {
@@ -64,6 +65,24 @@ void MouseMoveCallback(GLFWwindow* window, double xPos, double yPos)
     camera->ProcessMouseMovement(xOffset, yOffset);
 }
 
+void MouseClickCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    window; mods;
+
+    int x = static_cast<int>(std::round(camera->LookingAt().x));
+    int y = static_cast<int>(std::round(camera->LookingAt().y));
+    int z = static_cast<int>(std::round(camera->LookingAt().z));
+
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1)
+    {
+        AddCube(x, y, z);
+    }
+    else if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2)
+    {
+        RemoveCube(x, y, z);
+    }
+}
+
 void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
     window; xOffset;
@@ -72,7 +91,7 @@ void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
 
 void DebugLog(std::string message)
 {
-    std::cout << "[DEBUG] " << message;
+    std::cout << "[DEBUG] " << message << std::endl;
 }
 
 bool AddCube(int x, int y, int z)
@@ -87,6 +106,22 @@ bool AddCube(int x, int y, int z)
     else
     {
         DebugLog("Can't add cube, space already has one.");
+        return false;
+    }
+}
+
+bool RemoveCube(int x, int y, int z)
+{
+    std::tuple tuple = std::make_tuple(x, y, z);
+
+    auto it = cubes.find(tuple);
+    if (it != cubes.end() && it->second != nullptr)
+    {
+        cubes.erase(it);
+        return true;
+    }
+    else
+    {
         return false;
     }
 }

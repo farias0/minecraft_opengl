@@ -30,11 +30,16 @@ public:
         updateCameraVectors();
     }
 
+    glm::vec3 LookingAt()
+    {
+        return Pos + front;
+    }
+
     glm::mat4 GetViewMatrix()
     {
         // ATTENTION: The lookAt function with a fixed cameraUp will break if the 
         // camera's pitch is close to vertical, or if the camera rolls.
-        return glm::lookAt(Pos, Pos + front, WORLD_UP);
+        return glm::lookAt(Pos, LookingAt(), WORLD_UP);
     }
 
     glm::mat4 GetProjectionMatrix()
