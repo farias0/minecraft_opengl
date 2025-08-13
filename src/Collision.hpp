@@ -7,4 +7,4 @@ struct AABB {
     glm::vec3 max;
 };
 
-bool IntersectsAABB(const AABB& a, const AABB& b);
+float IntersectsAABB(const AABB& a, const AABB& b);

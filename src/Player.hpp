@@ -16,6 +16,7 @@ public:
     void Update();
 
     AABB GetCollisionBox();
+    AABB GetCollisionBoxFeet();
 
 private:
     bool isFlying = true;

@@ -1,7 +1,4 @@
-- fix player collision physics
-- player non-flying movement
-- player-block collision: check only nearby cubes
-
+- optimization, player-block collision: check only nearby cubes
 - crosshair
 - raycasting
 - jumping and/or autojumping (for ledges 1 block high)
@@ -9,7 +6,7 @@
 - hold to keep adding/deleting block
 
 
-- performance:
+- rendering performance:
     - single block render function
     - frustum culling
     - divide the world in chunks and only render the ones near
