@@ -1,14 +1,14 @@
 #include <stb_image.h>
 
-#include "Cube.hpp"
+#include "Block.hpp"
 
 #include "Camera.hpp"
 #include "Debug.hpp"
 #include "GameState.hpp"
 
-const char *Cube::TEXTURE_PATH = "resources/block.png";
+const char *Block::TEXTURE_PATH = "resources/block.png";
 
-const float Cube::MESH[180] = {
+const float Block::MESH[180] = {
     // Front face
     -0.5f, -0.5f, -0.5f,  0.25f, 0.33f,
     0.5f, -0.5f, -0.5f,  0.5f,  0.33f,
@@ -58,12 +58,12 @@ const float Cube::MESH[180] = {
     -0.5f,  0.5f, -0.5f,  0.5f,  1.0f
 };
 
-bool Cube::isDataLoaded = false;
-GLuint Cube::vao;
-GLuint Cube::texture;
-std::unique_ptr<Shader> Cube::shader;
+bool Block::isDataLoaded = false;
+GLuint Block::vao;
+GLuint Block::texture;
+std::unique_ptr<Shader> Block::shader;
 
-Cube::Cube(glm::vec3 pos) : 
+Block::Block(glm::vec3 pos) : 
     pos(pos)
 {
     if (!isDataLoaded)
@@ -73,7 +73,7 @@ Cube::Cube(glm::vec3 pos) :
     }
 }
 
-void Cube::Render()
+void Block::Render()
 {
     shader->Use();
 
@@ -95,7 +95,7 @@ void Cube::Render()
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-AABB Cube::GetCollisionBox()
+AABB Block::GetCollisionBox()
 {
     AABB box;
     box.min = pos + glm::vec3(-0.5f, -0.5f, -0.5f);
@@ -103,7 +103,7 @@ AABB Cube::GetCollisionBox()
     return box;
 }
 
-void Cube::LoadData()
+void Block::LoadData()
 {
     shader = std::unique_ptr<Shader>(new Shader("src/shaders/triangle.vs", "src/shaders/triangle.fs"));
 
@@ -154,5 +154,5 @@ void Cube::LoadData()
     shader->Use();
     shader->SetInt("texture1", 0); // texture bank (0 = GL_TEXTURE0)
 
-    DebugLog("CUBE finished loading data.");
+    DebugLog("BLOCK finished loading data.");
 }

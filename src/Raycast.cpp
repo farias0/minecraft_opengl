@@ -1,6 +1,6 @@
 #include "Raycast.hpp"
 
-#include "Cube.hpp"
+#include "Block.hpp"
 #include "GameState.hpp"
 
 std::optional<RaycastResult> RaycastBlocks(glm::vec3 pos, glm::vec3 dir, float maxDistance) {
@@ -46,9 +46,9 @@ std::optional<RaycastResult> RaycastBlocks(glm::vec3 pos, glm::vec3 dir, float m
     // Step through voxels
     while (true) {
         // Check if current voxel contains a block
-        CubeIndex currentPos = std::make_tuple(x, y, z);
-        auto it = cubes.find(currentPos);
-        if (it != cubes.end() && it->second != nullptr) {
+        BlockIndex currentPos = std::make_tuple(x, y, z);
+        auto it = blocks.find(currentPos);
+        if (it != blocks.end() && it->second != nullptr) {
             // Found a block! Calculate distance
             float currentDistance;
             if (tMaxX - tDeltaX < tMaxY - tDeltaY && tMaxX - tDeltaX < tMaxZ - tDeltaZ) {

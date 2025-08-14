@@ -5,13 +5,13 @@
 #include "Collision.hpp"
 #include "Shader.hpp"
 
-class Cube
+class Block
 {
 public:
 
     glm::vec3 pos;
 
-    Cube(glm::vec3 pos);
+    Block(glm::vec3 pos);
     void Render();
 
     AABB GetCollisionBox();

@@ -1,7 +1,7 @@
 #include "GameState.hpp"
 
 #include "Camera.hpp"
-#include "Cube.hpp"
+#include "Block.hpp"
 #include "HUD.hpp"
 #include "Player.hpp"
 
@@ -19,4 +19,4 @@ std::unique_ptr<HUD> hud = nullptr;
 
 std::unique_ptr<Player> player = nullptr;
 
-std::map<std::tuple<int, int, int>, std::unique_ptr<Cube>> cubes;
+std::map<std::tuple<int, int, int>, std::unique_ptr<Block>> blocks;

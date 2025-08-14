@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME}
                 external/stb/stb_perlin.cpp
                 src/GameState.cpp
                 src/Game.cpp
-                src/Cube.cpp
+                src/Block.cpp
                 src/Player.cpp
                 src/Collision.cpp
                 src/HUD.cpp

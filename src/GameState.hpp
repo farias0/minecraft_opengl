@@ -20,6 +20,6 @@ extern std::unique_ptr<HUD> hud;
 class Player;
 extern std::unique_ptr<Player> player;
 
-class Cube;
-typedef std::tuple<int, int, int> CubeIndex;
-extern std::map<CubeIndex, std::unique_ptr<Cube>> cubes;
+class Block;
+typedef std::tuple<int, int, int> BlockIndex;
+extern std::map<BlockIndex, std::unique_ptr<Block>> blocks;

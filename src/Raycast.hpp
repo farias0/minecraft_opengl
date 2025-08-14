@@ -7,7 +7,7 @@
 #include "GameState.hpp"
 
 struct RaycastResult {
-    CubeIndex blockPos;
+    BlockIndex blockPos;
     glm::vec3 hitFace; // Normal of the face that was hit (-1, 0, or 1 for each axis)
     float distance;
 };

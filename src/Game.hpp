@@ -13,5 +13,5 @@ void MouseMoveCallback(GLFWwindow* window, double xPos, double yPos);
 void MouseClickCallback(GLFWwindow* window, int button, int action, int mods);
 void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset);
 
-bool AddCube(CubeIndex cubeIndex);
-bool RemoveCube(CubeIndex cubeIndex);
+bool AddBlock(BlockIndex blockIndex);
+bool RemoveBlock(BlockIndex blockIndex);

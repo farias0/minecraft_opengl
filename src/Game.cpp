@@ -6,15 +6,13 @@
 #include "Game.hpp"
 
 #include "Camera.hpp"
-#include "Cube.hpp"
+#include "Block.hpp"
 #include "Debug.hpp"
 #include "GameState.hpp"
 #include "HUD.hpp"
 #include "Player.hpp"
 
 
-bool AddCube(int x, int y, int z);
-bool RemoveCube(int x, int y, int z);
 void GenerateTerrain();
 
 void StartGame()
@@ -35,7 +33,7 @@ void UpdateGame()
 
 void RenderGame()
 {
-    for (auto it = cubes.begin(); it != cubes.end(); it++)
+    for (auto it = blocks.begin(); it != blocks.end(); it++)
     {
         it->second->Render();
     }
@@ -72,27 +70,27 @@ void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
     camera->ProcessMouseScroll((float)yOffset);
 }
 
-bool AddCube(CubeIndex cubeIndex)
+bool AddBlock(BlockIndex blockIndex)
 {
-    if (cubes[cubeIndex] == nullptr)
+    if (blocks[blockIndex] == nullptr)
     {
-        glm::vec3 cubePos = glm::vec3(std::get<0>(cubeIndex), std::get<1>(cubeIndex), std::get<2>(cubeIndex));
-        cubes[cubeIndex] = std::unique_ptr<Cube>(new Cube(cubePos));
+        glm::vec3 blockPos = glm::vec3(std::get<0>(blockIndex), std::get<1>(blockIndex), std::get<2>(blockIndex));
+        blocks[blockIndex] = std::unique_ptr<Block>(new Block(blockPos));
         return true;
     }
     else
     {
-        DebugLog("Can't add cube, space already has one.");
+        DebugLog("Can't add block, space already has one.");
         return false;
     }
 }
 
-bool RemoveCube(CubeIndex cubeIndex)
+bool RemoveBlock(BlockIndex blockIndex)
 {
-    auto it = cubes.find(cubeIndex);
-    if (it != cubes.end() && it->second != nullptr)
+    auto it = blocks.find(blockIndex);
+    if (it != blocks.end() && it->second != nullptr)
     {
-        cubes.erase(it);
+        blocks.erase(it);
         return true;
     }
     else
@@ -123,7 +121,7 @@ void GenerateTerrain()
             int columnThickness = static_cast<int>(std::round(terrainThickness * noise));
             for (int y = surfaceYMax - terrainThickness; y < surfaceYMax - terrainThickness + columnThickness; y++)
             {
-                AddCube(std::make_tuple(x, y, z));
+                AddBlock(std::make_tuple(x, y, z));
                 count++;
             }
         }

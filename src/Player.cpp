@@ -4,7 +4,7 @@
 
 #include "Camera.hpp"
 #include "Collision.hpp"
-#include "Cube.hpp"
+#include "Block.hpp"
 #include "Debug.hpp"
 #include "Game.hpp"
 #include "GameState.hpp"
@@ -81,19 +81,19 @@ void Player::ProcessMouseClick(GLFWwindow* window, int button, int action, int m
 
     if (rayResult.has_value())
     {
-        CubeIndex cubeIndex = rayResult.value().blockPos;
+        BlockIndex blockIndexIndex = rayResult.value().blockPos;
 
         if (isPuttingBlock)
         {
             glm::vec3 hitFace = rayResult.value().hitFace;
-            CubeIndex placeCubeIndex = std::make_tuple(std::get<0>(cubeIndex) + hitFace.x, 
-                                                        std::get<1>(cubeIndex) + hitFace.y,
-                                                        std::get<2>(cubeIndex) + hitFace.z);
-            AddCube(placeCubeIndex);
+            BlockIndex placeBlockIndex = std::make_tuple(std::get<0>(blockIndexIndex) + (int) hitFace.x, 
+                                                            std::get<1>(blockIndexIndex) + (int) hitFace.y,
+                                                            std::get<2>(blockIndexIndex) + (int) hitFace.z);
+            AddBlock(placeBlockIndex);
         }
         else if (isRemovingBlock)
         {
-            RemoveCube(cubeIndex);
+            RemoveBlock(blockIndexIndex);
         }
     }
     else
@@ -103,7 +103,7 @@ void Player::ProcessMouseClick(GLFWwindow* window, int button, int action, int m
             int x = static_cast<int>(std::round(camera->LookingAt().x));
             int y = static_cast<int>(std::round(camera->LookingAt().y));
             int z = static_cast<int>(std::round(camera->LookingAt().z));
-            AddCube(std::make_tuple(x, y, z));
+            AddBlock(std::make_tuple(x, y, z));
         }
     }
 }
@@ -115,8 +115,8 @@ void Player::Update()
     {
         isOnGround = false;
 
-        // TODO only check for cubes nearby
-        for (auto it = cubes.begin(); it != cubes.end(); it++)
+        // TODO only check for blocks nearby
+        for (auto it = blocks.begin(); it != blocks.end(); it++)
         {
             if (IntersectsAABB(GetCollisionBoxFeet(), it->second->GetCollisionBox()) > 0)
             {
