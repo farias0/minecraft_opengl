@@ -1,3 +1,4 @@
+#include <chrono>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <sstream>
@@ -118,20 +119,39 @@ void Player::Update()
     {
         isOnGround = false;
 
-        // TODO only check for blocks nearby
-        for (auto it = blocks.begin(); it != blocks.end(); it++)
+        // int count = 0;
+        // auto start = std::chrono::high_resolution_clock::now();
+
+        for (int cursorX = (int)std::floor(Pos.x); cursorX <= (int)std::ceil(Pos.x); cursorX++)
         {
-            if (IntersectsAABB(GetCollisionBoxFeet(), it->second->GetCollisionBox()) > 0)
+            for (int cursorY = (int)std::floor(Pos.y) - 1; cursorY <= (int)std::ceil(Pos.y) + 1; cursorY++)
             {
-                isOnGround = true;
-                velocity.y = 0;
-                Pos.y = it->second->pos.y + 0.5f + (PLAYER_HEIGHT * 0.5f);
-            }
-            else if (float intersect = IntersectsAABB(GetCollisionBox(), it->second->GetCollisionBox()); intersect > 0)
-            {
-                Pos += glm::normalize(Pos - it->second->pos) * intersect;
+                for (int cursorZ = (int)std::floor(Pos.z); cursorZ <= (int)std::ceil(Pos.z); cursorZ++)
+                {
+                    auto it = blocks.find(std::make_tuple(cursorX, cursorY, cursorZ));
+                    if (it != blocks.end() && it->second != nullptr)
+                    {
+                        if (IntersectsAABB(GetCollisionBoxFeet(), it->second->GetCollisionBox()) > 0)
+                        {
+                            isOnGround = true;
+                            velocity.y = 0;
+                            Pos.y = it->second->pos.y + 0.5f + (PLAYER_HEIGHT * 0.5f);
+                        }
+                        else if (float intersect = IntersectsAABB(GetCollisionBox(), it->second->GetCollisionBox()); intersect > 0)
+                        {
+                            Pos += glm::normalize(Pos - it->second->pos) * intersect;
+                        }
+                    }
+
+                    // count++;
+                }
             }
         }
+
+        // auto finish = std::chrono::high_resolution_clock::now();
+        // std::stringstream logMsg;
+        // logMsg << "PLAYER block collision check count=" << count << ", took us=" << std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+        // DebugLog(logMsg.str());
 
         if (!isOnGround)
         {
