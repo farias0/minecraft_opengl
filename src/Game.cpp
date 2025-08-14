@@ -33,10 +33,7 @@ void UpdateGame()
 
 void RenderGame()
 {
-    for (auto it = blocks.begin(); it != blocks.end(); it++)
-    {
-        it->second->Render();
-    }
+    Block::Render();
 
     hud->Render();
 }
@@ -102,8 +99,8 @@ bool RemoveBlock(BlockIndex blockIndex)
 void GenerateTerrain()
 {
     const int surfaceYMax = -2;
-    const int terrainThickness = 3;
-    const int minX = -15, maxX = 15, minZ = -15, maxZ = 15;
+    const int terrainThickness = 4;
+    const int minX = -30, maxX = 30, minZ = -30, maxZ = 30;
     const float lacunarity = 1.4f, gain = 0.5f;
     const int octaves = 2;
     int count = 0;

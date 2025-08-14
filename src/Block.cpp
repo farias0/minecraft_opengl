@@ -1,3 +1,4 @@
+#include <chrono>
 #include <stb_image.h>
 
 #include "Block.hpp"
@@ -75,6 +76,9 @@ Block::Block(glm::vec3 pos) :
 
 void Block::Render()
 {
+
+    // auto start = std::chrono::high_resolution_clock::now();
+
     shader->Use();
 
     glActiveTexture(GL_TEXTURE0);
@@ -83,16 +87,24 @@ void Block::Render()
     glBindVertexArray(vao);
 
     glm::mat4 view = camera->GetViewMatrix();
-    glm::mat4 projection = camera->GetProjectionMatrix();
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, pos);
-    
-    shader->SetMat4("model", model);
     shader->SetMat4("view", view);
+
+    glm::mat4 projection = camera->GetProjectionMatrix();
     shader->SetMat4("projection", projection);
-    
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    for (auto it = blocks.begin(); it != blocks.end(); it++)
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, it->second->pos);
+        shader->SetMat4("model", model);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    // auto finish = std::chrono::high_resolution_clock::now();
+    // std::stringstream logMsg;
+    // logMsg << "BLOCK render in us=" << std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+    // DebugLog(logMsg.str());
 }
 
 AABB Block::GetCollisionBox()

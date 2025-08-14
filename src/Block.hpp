@@ -12,7 +12,7 @@ public:
     glm::vec3 pos;
 
     Block(glm::vec3 pos);
-    void Render();
+    static void Render();
 
     AABB GetCollisionBox();
 
@@ -25,5 +25,5 @@ private:
     static GLuint texture;
     static std::unique_ptr<Shader> shader;
 
-    void LoadData();
+    static void LoadData();
 };

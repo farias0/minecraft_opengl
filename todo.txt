@@ -5,11 +5,11 @@
 
 - rendering performance:
     - don't render internal faces
-    - single block render function
     - frustum culling
     - divide the world in chunks and only render the ones near
     - load all cubes from a chunk into a single vertex buffer
     - only load vertex faces that are exposed to the air to the buffer
+    - batch rendering?
     - greedy meshing?
     - texture atlas?
     
