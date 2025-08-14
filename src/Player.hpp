@@ -14,6 +14,7 @@ public:
 
     Player(glm::vec3 pos);
     void ProcessKeyboardMovement(GLFWwindow *window);
+    void ProcessMouseClick(GLFWwindow* window, int button, int action, int mods);
     void Update();
 
     AABB GetCollisionBox();

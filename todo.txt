@@ -1,5 +1,6 @@
+- rename "cube" to "block"
+
 - optimization, player-block collision: check only nearby cubes
-- raycasting
 - jumping and/or autojumping (for ledges 1 block high)
 - delete block animation (shader, transparency, something simple)
 - hold to keep adding/deleting block

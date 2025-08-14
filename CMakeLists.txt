@@ -26,7 +26,8 @@ add_executable(${PROJECT_NAME}
                 src/Cube.cpp
                 src/Player.cpp
                 src/Collision.cpp
-                src/HUD.cpp)
+                src/HUD.cpp
+                src/Raycast.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw OpenGL::GL glad glm::glm-header-only)
 

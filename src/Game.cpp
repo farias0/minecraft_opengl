@@ -63,20 +63,7 @@ void MouseMoveCallback(GLFWwindow* window, double xPos, double yPos)
 
 void MouseClickCallback(GLFWwindow* window, int button, int action, int mods)
 {
-    window; mods;
-
-    int x = static_cast<int>(std::round(camera->LookingAt().x));
-    int y = static_cast<int>(std::round(camera->LookingAt().y));
-    int z = static_cast<int>(std::round(camera->LookingAt().z));
-
-    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1)
-    {
-        AddCube(x, y, z);
-    }
-    else if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2)
-    {
-        RemoveCube(x, y, z);
-    }
+    player->ProcessMouseClick(window, button, action, mods);
 }
 
 void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
@@ -85,13 +72,12 @@ void ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
     camera->ProcessMouseScroll((float)yOffset);
 }
 
-bool AddCube(int x, int y, int z)
+bool AddCube(CubeIndex cubeIndex)
 {
-    std::tuple tuple = std::make_tuple(x, y, z);
-
-    if (cubes[tuple] == nullptr)
+    if (cubes[cubeIndex] == nullptr)
     {
-        cubes[tuple] = std::unique_ptr<Cube>(new Cube(glm::vec3(x, y, z)));
+        glm::vec3 cubePos = glm::vec3(std::get<0>(cubeIndex), std::get<1>(cubeIndex), std::get<2>(cubeIndex));
+        cubes[cubeIndex] = std::unique_ptr<Cube>(new Cube(cubePos));
         return true;
     }
     else
@@ -101,11 +87,9 @@ bool AddCube(int x, int y, int z)
     }
 }
 
-bool RemoveCube(int x, int y, int z)
+bool RemoveCube(CubeIndex cubeIndex)
 {
-    std::tuple tuple = std::make_tuple(x, y, z);
-
-    auto it = cubes.find(tuple);
+    auto it = cubes.find(cubeIndex);
     if (it != cubes.end() && it->second != nullptr)
     {
         cubes.erase(it);
@@ -139,7 +123,7 @@ void GenerateTerrain()
             int columnThickness = static_cast<int>(std::round(terrainThickness * noise));
             for (int y = surfaceYMax - terrainThickness; y < surfaceYMax - terrainThickness + columnThickness; y++)
             {
-                AddCube(x, y, z);
+                AddCube(std::make_tuple(x, y, z));
                 count++;
             }
         }

@@ -21,4 +21,5 @@ class Player;
 extern std::unique_ptr<Player> player;
 
 class Cube;
-extern std::map<std::tuple<int, int, int>, std::unique_ptr<Cube>> cubes;
+typedef std::tuple<int, int, int> CubeIndex;
+extern std::map<CubeIndex, std::unique_ptr<Cube>> cubes;

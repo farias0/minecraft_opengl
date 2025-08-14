@@ -6,13 +6,16 @@
 #include "Collision.hpp"
 #include "Cube.hpp"
 #include "Debug.hpp"
+#include "Game.hpp"
 #include "GameState.hpp"
 #include "Player.hpp"
+#include "Raycast.hpp"
 
 static const double JUMP_DOUBLE_PRESS_WINDOW = 0.15f;
 static const double JUMP_DOUBLE_PRESS_WINDOW_MIN = 0.07f;
 static const float PLAYER_HEIGHT = 2.0f;
 static const float PLAYER_EYE_LEVEL = 0.85f; // proportionally to height
+static const float INTERACT_BLOCK_DIST = 3.5f;
 
 Player::Player(glm::vec3 pos) :
     Pos(pos)
@@ -65,6 +68,44 @@ void Player::ProcessKeyboardMovement(GLFWwindow *window)
 
     if (deltaMove != noMove)
             Pos += MOVE_SPEED * deltaTime * glm::normalize(deltaMove);
+}
+
+void Player::ProcessMouseClick(GLFWwindow* window, int button, int action, int mods)
+{
+    window; mods;
+
+    bool isPuttingBlock = action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1;
+    bool isRemovingBlock = action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2;
+
+    std::optional<RaycastResult> rayResult = RaycastBlocks(Pos, camera->Front, INTERACT_BLOCK_DIST);
+
+    if (rayResult.has_value())
+    {
+        CubeIndex cubeIndex = rayResult.value().blockPos;
+
+        if (isPuttingBlock)
+        {
+            glm::vec3 hitFace = rayResult.value().hitFace;
+            CubeIndex placeCubeIndex = std::make_tuple(std::get<0>(cubeIndex) + hitFace.x, 
+                                                        std::get<1>(cubeIndex) + hitFace.y,
+                                                        std::get<2>(cubeIndex) + hitFace.z);
+            AddCube(placeCubeIndex);
+        }
+        else if (isRemovingBlock)
+        {
+            RemoveCube(cubeIndex);
+        }
+    }
+    else
+    {
+        if (isPuttingBlock)
+        {
+            int x = static_cast<int>(std::round(camera->LookingAt().x));
+            int y = static_cast<int>(std::round(camera->LookingAt().y));
+            int z = static_cast<int>(std::round(camera->LookingAt().z));
+            AddCube(std::make_tuple(x, y, z));
+        }
+    }
 }
 
 void Player::Update()
