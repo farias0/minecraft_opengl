@@ -11,6 +11,7 @@ const float MOVE_SPEED = 7.0f;
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 const float MOUSE_SENSITIVITY = 0.1f;
 const float ZOOM_SENSITIVITY = 5.0f;
+const float FOV_DEFAULT = 60.0f;
 
 class Camera
 {
@@ -59,12 +60,12 @@ public:
         fov -= (float)yOffset * ZOOM_SENSITIVITY;
         if (fov < 1.0f)
             fov = 1.0f;
-        if (fov > 45.0f)
-            fov = 45.0f; 
+        if (fov > FOV_DEFAULT)
+            fov = FOV_DEFAULT; 
     }
 
 private:
-    float fov = 45.0f;
+    float fov = FOV_DEFAULT;
     float yaw = -90.0f;
     float pitch = 0.0f;
 

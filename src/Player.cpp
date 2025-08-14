@@ -16,6 +16,7 @@ static const double JUMP_DOUBLE_PRESS_WINDOW_MIN = 0.07f;
 static const float PLAYER_HEIGHT = 2.0f;
 static const float PLAYER_EYE_LEVEL = 0.85f; // proportionally to height
 static const float INTERACT_BLOCK_DIST = 3.5f;
+static const float JUMP_IMPULSE = 5.0f;
 
 Player::Player(glm::vec3 pos) :
     Pos(pos)
@@ -64,6 +65,8 @@ void Player::ProcessKeyboardMovement(GLFWwindow *window)
             deltaMove -= camera->Right;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             deltaMove += camera->Right;
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isOnGround)
+            Jump();
     }
 
     if (deltaMove != noMove)
@@ -150,9 +153,15 @@ AABB Player::GetCollisionBox()
 AABB Player::GetCollisionBoxFeet()
 {
     AABB box;
-    box.min = Pos + glm::vec3(-0.25f,  (PLAYER_HEIGHT * -0.5) - 0.2, -0.25f);
-    box.max = Pos + glm::vec3( 0.25f,  (PLAYER_HEIGHT * -0.5) + 0.2,  0.25f);
+    box.min = Pos + glm::vec3(-0.25f,  (PLAYER_HEIGHT * -0.5) - 0.1, -0.25f);
+    box.max = Pos + glm::vec3( 0.25f,  (PLAYER_HEIGHT * -0.5) + 0.1,  0.25f);
     return box;
+}
+
+void Player::Jump()
+{
+    Pos += WORLD_UP * 0.1f; // Take off ground
+    velocity += WORLD_UP * JUMP_IMPULSE;
 }
 
 void Player::ToggleFlyMode()

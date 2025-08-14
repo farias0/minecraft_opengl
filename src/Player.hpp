@@ -26,5 +26,6 @@ private:
 
     glm::vec3 velocity;
 
+    void Jump();
     void ToggleFlyMode();
 };

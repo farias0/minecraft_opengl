@@ -1,5 +1,6 @@
+- fix raycasting
 - optimization, player-block collision: check only nearby cubes
-- jumping and/or autojumping (for ledges 1 block high)
+
 - delete block animation (shader, transparency, something simple)
 - hold to keep adding/deleting block
 
