@@ -10,6 +10,7 @@ class Player
 {
 public:
     glm::vec3 Pos;
+    bool IsFlying = true;
 
     Player(glm::vec3 pos);
     void ProcessKeyboardMovement(GLFWwindow *window);
@@ -19,7 +20,6 @@ public:
     AABB GetCollisionBoxFeet();
 
 private:
-    bool isFlying = true;
     double lastPressedJump;
     bool isOnGround = false;
 

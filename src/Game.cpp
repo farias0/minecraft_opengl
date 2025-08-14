@@ -9,6 +9,7 @@
 #include "Cube.hpp"
 #include "Debug.hpp"
 #include "GameState.hpp"
+#include "HUD.hpp"
 #include "Player.hpp"
 
 
@@ -21,6 +22,8 @@ void StartGame()
     player = std::unique_ptr<Player>(new Player(glm::vec3(0, 0, 0)));
 
     camera = std::unique_ptr<Camera>(new Camera());
+
+    hud = std::unique_ptr<HUD>(new HUD());
     
     GenerateTerrain();
 }
@@ -36,6 +39,8 @@ void RenderGame()
     {
         it->second->Render();
     }
+
+    hud->Render();
 }
 
 void ProcessInput(GLFWwindow *window) {

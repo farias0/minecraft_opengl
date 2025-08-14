@@ -9,7 +9,8 @@
 #include "GameState.hpp"
 #include "Player.hpp"
 
-static const double JUMP_DOUBLE_PRESS_WINDOW = 0.5f;
+static const double JUMP_DOUBLE_PRESS_WINDOW = 0.15f;
+static const double JUMP_DOUBLE_PRESS_WINDOW_MIN = 0.07f;
 static const float PLAYER_HEIGHT = 2.0f;
 static const float PLAYER_EYE_LEVEL = 0.85f; // proportionally to height
 
@@ -24,7 +25,7 @@ void Player::ProcessKeyboardMovement(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
         double now = glfwGetTime();
-        if (now - lastPressedJump > (deltaTime*5) && now - lastPressedJump <= JUMP_DOUBLE_PRESS_WINDOW)
+        if (now - lastPressedJump > JUMP_DOUBLE_PRESS_WINDOW_MIN && now - lastPressedJump <= JUMP_DOUBLE_PRESS_WINDOW)
         {
             ToggleFlyMode();
             lastPressedJump = 0;
@@ -35,7 +36,7 @@ void Player::ProcessKeyboardMovement(GLFWwindow *window)
     glm::vec3 deltaMove = glm::vec3(0, 0, 0);
     glm::vec3 noMove = deltaMove;
 
-    if (isFlying)
+    if (IsFlying)
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             deltaMove += camera->Front;
@@ -68,7 +69,7 @@ void Player::ProcessKeyboardMovement(GLFWwindow *window)
 
 void Player::Update()
 {
-    if (isFlying) velocity = glm::vec3(0, 0, 0);
+    if (IsFlying) velocity = glm::vec3(0, 0, 0);
     else
     {
         isOnGround = false;
@@ -115,5 +116,5 @@ AABB Player::GetCollisionBoxFeet()
 
 void Player::ToggleFlyMode()
 {
-    isFlying = !isFlying;
+    IsFlying = !IsFlying;
 }
