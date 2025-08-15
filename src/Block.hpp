@@ -19,9 +19,11 @@ public:
 private:
     static const char *TEXTURE_PATH;
     static const float MESH[180];
+    static const unsigned int MAX_BLOCK_COUNT;
 
     static bool isDataLoaded;
     static GLuint vao;
+    static GLuint instanceVBO;
     static GLuint texture;
     static std::unique_ptr<Shader> shader;
 

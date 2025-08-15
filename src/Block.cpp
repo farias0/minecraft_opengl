@@ -1,5 +1,6 @@
 #include <chrono>
 #include <stb_image.h>
+#include <vector>
 
 #include "Block.hpp"
 
@@ -59,8 +60,11 @@ const float Block::MESH[180] = {
     -0.5f,  0.5f,  0.5f,  0.5f,  0.66f
 };
 
+const unsigned int Block::MAX_BLOCK_COUNT = 100000;
+
 bool Block::isDataLoaded = false;
 GLuint Block::vao;
+GLuint Block::instanceVBO;
 GLuint Block::texture;
 std::unique_ptr<Shader> Block::shader;
 
@@ -86,20 +90,20 @@ void Block::Render()
 
     glBindVertexArray(vao);
 
-    glm::mat4 view = camera->GetViewMatrix();
-    shader->SetMat4("view", view);
+    shader->SetMat4("view", camera->GetViewMatrix());
+    shader->SetMat4("projection", camera->GetProjectionMatrix());
 
-    glm::mat4 projection = camera->GetProjectionMatrix();
-    shader->SetMat4("projection", projection);
-
-    for (auto it = blocks.begin(); it != blocks.end(); it++)
-    {
+    std::vector<glm::mat4> modelMatrices;
+    modelMatrices.reserve(blocks.size());
+    for (auto &pair : blocks) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, it->second->pos);
-        shader->SetMat4("model", model);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::translate(model, pair.second->pos);
+        modelMatrices.push_back(model);
     }
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, modelMatrices.size() * sizeof(glm::mat4), modelMatrices.data());
+
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, (GLsizei)modelMatrices.size());
 
     // auto finish = std::chrono::high_resolution_clock::now();
     // std::stringstream logMsg;
@@ -117,7 +121,8 @@ AABB Block::GetCollisionBox()
 
 void Block::LoadData()
 {
-    shader = std::unique_ptr<Shader>(new Shader("src/shaders/triangle.vs", "src/shaders/triangle.fs"));
+    shader = std::unique_ptr<Shader>(new Shader("src/shaders/block.vs", "src/shaders/block.fs"));
+
 
     GLuint vbo;
     glGenVertexArrays(1, &vao);
@@ -132,6 +137,21 @@ void Block::LoadData()
     // texcoord
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, MAX_BLOCK_COUNT * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
+
+    // instance model
+    for (int i = 0; i < 4; i++) {
+        glEnableVertexAttribArray(3 + i);
+        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(i * sizeof(glm::vec4)));
+        glVertexAttribDivisor(3 + i, 1);
+    }
+
+    glBindVertexArray(0);
+
 
     int width, height, nrChannels;
     unsigned char *texData;
