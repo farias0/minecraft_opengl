@@ -99,8 +99,8 @@ bool RemoveBlock(BlockIndex blockIndex)
 void GenerateTerrain()
 {
     const int surfaceYMax = -2;
-    const int terrainThickness = 4;
-    const int minX = -30, maxX = 30, minZ = -30, maxZ = 30;
+    const int terrainThickness = 5;
+    const int minX = -60, maxX = 60, minZ = -60, maxZ = 60;
     const float lacunarity = 1.4f, gain = 0.5f;
     const int octaves = 2;
     int count = 0;
