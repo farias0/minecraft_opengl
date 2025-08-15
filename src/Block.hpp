@@ -23,7 +23,7 @@ private:
 
     static bool isDataLoaded;
     static GLuint vao;
-    static GLuint instanceVBO;
+    static glm::mat4 *instanceData;
     static GLuint texture;
     static std::unique_ptr<Shader> shader;
 

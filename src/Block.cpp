@@ -64,7 +64,7 @@ const unsigned int Block::MAX_BLOCK_COUNT = 100000;
 
 bool Block::isDataLoaded = false;
 GLuint Block::vao;
-GLuint Block::instanceVBO;
+glm::mat4 *Block::instanceData;
 GLuint Block::texture;
 std::unique_ptr<Shader> Block::shader;
 
@@ -93,17 +93,14 @@ void Block::Render()
     shader->SetMat4("view", camera->GetViewMatrix());
     shader->SetMat4("projection", camera->GetProjectionMatrix());
 
-    std::vector<glm::mat4> modelMatrices;
-    modelMatrices.reserve(blocks.size());
+    size_t i = 0;
     for (auto &pair : blocks) {
-        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 model(1.0f);
         model = glm::translate(model, pair.second->pos);
-        modelMatrices.push_back(model);
+        instanceData[i++] = model;
     }
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, modelMatrices.size() * sizeof(glm::mat4), modelMatrices.data());
 
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, (GLsizei)modelMatrices.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, (GLsizei)blocks.size());
 
     // auto finish = std::chrono::high_resolution_clock::now();
     // std::stringstream logMsg;
@@ -139,9 +136,22 @@ void Block::LoadData()
     glEnableVertexAttribArray(1);
 
 
+    GLuint instanceVBO;
     glGenBuffers(1, &instanceVBO);
     glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glBufferData(GL_ARRAY_BUFFER, MAX_BLOCK_COUNT * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
+    GLsizeiptr instVBOBufferSize = MAX_BLOCK_COUNT * sizeof(glm::mat4);
+    glBufferStorage(
+        GL_ARRAY_BUFFER,
+        instVBOBufferSize,
+        nullptr,
+        GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT
+    );
+    instanceData = (glm::mat4*) glMapBufferRange(
+        GL_ARRAY_BUFFER,
+        0,
+        instVBOBufferSize,
+        GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT
+    );
 
     // instance model
     for (int i = 0; i < 4; i++) {
