@@ -28,4 +28,6 @@ private:
     static std::unique_ptr<Shader> shader;
 
     static void LoadData();
+    
+    bool IsInFrustum(glm::vec4 *frustumPlanes);
 };

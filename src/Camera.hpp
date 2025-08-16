@@ -6,6 +6,7 @@
 
 #include "GameState.hpp"
 #include "Player.hpp"
+#include <glm/gtc/matrix_access.hpp>
 
 const float MOVE_SPEED = 7.0f;
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -62,6 +63,29 @@ public:
             fov = 1.0f;
         if (fov > FOV_DEFAULT)
             fov = FOV_DEFAULT; 
+    }
+
+    glm::vec4 *GetFrustumPlanes()
+    {
+        glm::mat4 VP = GetProjectionMatrix() * GetViewMatrix();
+
+        glm::vec4 *planes = new glm::vec4[6];
+
+        // GLM row access
+        planes[0] = glm::row(VP, 3) + glm::row(VP, 0); // Left
+        planes[1] = glm::row(VP, 3) - glm::row(VP, 0); // Right
+        planes[2] = glm::row(VP, 3) + glm::row(VP, 1); // Bottom
+        planes[3] = glm::row(VP, 3) - glm::row(VP, 1); // Top
+        planes[4] = glm::row(VP, 3) + glm::row(VP, 2); // Near
+        planes[5] = glm::row(VP, 3) - glm::row(VP, 2); // Far
+
+        // Normalize planes
+        for (int i = 0; i < 6; i++) {
+            float length = glm::length(glm::vec3(planes[i]));
+            planes[i] /= length;
+        }
+
+        return planes;
     }
 
 private:
