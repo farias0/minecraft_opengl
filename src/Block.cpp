@@ -81,7 +81,7 @@ Block::Block(glm::vec3 pos) :
 void Block::Render()
 {
 
-    // auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
     shader->Use();
 
@@ -93,19 +93,26 @@ void Block::Render()
     shader->SetMat4("view", camera->GetViewMatrix());
     shader->SetMat4("projection", camera->GetProjectionMatrix());
 
+    assert(blocks.size() <= MAX_BLOCK_COUNT);
+
     size_t i = 0;
+    glm::vec4 *frustumPlanes = camera->GetFrustumPlanes();
     for (auto &pair : blocks) {
-        glm::mat4 model(1.0f);
-        model = glm::translate(model, pair.second->pos);
-        instanceData[i++] = model;
+        if (pair.second->IsInFrustum(frustumPlanes))
+        {
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, pair.second->pos);
+            instanceData[i++] = model;
+        }
     }
+    delete[] frustumPlanes;
 
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, (GLsizei)blocks.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, (GLsizei)i);
 
-    // auto finish = std::chrono::high_resolution_clock::now();
-    // std::stringstream logMsg;
-    // logMsg << "BLOCK render in us=" << std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
-    // DebugLog(logMsg.str());
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::stringstream logMsg;
+    logMsg << "BLOCK render in us=" << std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count() << " blocks rendered=" << i;
+    DebugLog(logMsg.str());
 }
 
 AABB Block::GetCollisionBox()
@@ -197,4 +204,25 @@ void Block::LoadData()
     shader->SetInt("texture1", 0); // texture bank (0 = GL_TEXTURE0)
 
     DebugLog("BLOCK finished loading data.");
+}
+
+bool Block::IsInFrustum(glm::vec4 *frustumPlanes)
+{
+    for (int i = 0; i < 6; i++) {
+        glm::vec3 normal = glm::vec3(frustumPlanes[i]);
+        float d = frustumPlanes[i].w;
+
+        AABB collisionBox = GetCollisionBox();
+
+        glm::vec3 positiveVertex = collisionBox.min;
+
+        if (normal.x >= 0) positiveVertex.x = collisionBox.max.x;
+        if (normal.y >= 0) positiveVertex.y = collisionBox.max.y;
+        if (normal.z >= 0) positiveVertex.z = collisionBox.max.z;
+
+        if (glm::dot(normal, positiveVertex) + d < 0)
+            return false;
+    }
+
+    return true;
 }
